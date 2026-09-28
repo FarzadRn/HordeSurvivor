@@ -1,8 +1,7 @@
 # Hoard Survivor
 
-![Unreal Engine](https://img.shields.io/badge/Unreal%20Engine-5.7-black?logo=unrealengine)
-![Status](https://img.shields.io/badge/status-in%20development-orange)
-![CG Spectrum](https://img.shields.io/badge/CG%20Spectrum-Game%20Programming-blueviolet)
+[![Unreal Engine](https://img.shields.io/badge/Unreal%20Engine-5.7-black?logo=unrealengine)](https://www.unrealengine.com)
+[![Status](https://img.shields.io/badge/status-in%20development-orange)](#)
 
 A first-person survival game built in **C++ and Unreal Engine 5.7**.
 My main portfolio project for the **Game Programming** course at **CG Spectrum**.
