@@ -1,0 +1,19 @@
+# Unreal generated folders
+Binaries/
+Intermediate/
+Saved/
+DerivedDataCache/
+Plugins/*/Binaries
+Plugins/*/Intermediate
+
+# IDE files
+.vs/
+.idea/
+*.sln
+*.suo
+*.VC.db
+*.opensdf
+*.sdf
+
+#licensed/marketplace folders here:
+#e.g.: Content/MarketPack/
