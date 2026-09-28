@@ -1,7 +1,6 @@
 # Hoard Survivor
 
 ![Unreal Engine](https://img.shields.io/badge/Unreal%20Engine-5.7-black?logo=unrealengine)
-![C++](https://img.shields.io/badge/C%2B%2B-20-blue?logo=cplusplus)
 ![Status](https://img.shields.io/badge/status-in%20development-orange)
 
 A first-person survival game built in **C++ and Unreal Engine 5.7**.
