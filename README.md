@@ -1,4 +1,4 @@
-# Hoard Survivor
+# Horde Survivor
 
 [![Unreal Engine](https://img.shields.io/badge/Unreal%20Engine-5.7-black?logo=unrealengine)](#)
 [![Status](https://img.shields.io/badge/status-in%20development-orange)](#)
