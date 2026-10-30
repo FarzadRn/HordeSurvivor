@@ -7,6 +7,7 @@
 class UHSWeaponData;
 class UArrowComponent;
 class UHSWeaponComponent;
+struct FGameplayAttribute;
 
 UCLASS(Abstract)
 class HOARDSURVIVOR_API AHSWeapon : public AActor
@@ -52,6 +53,10 @@ protected:
 private:
 	void FireShot();
 	void FinishReload();
+	// Attribute value on the owner's Ability System Component, or 1 if the owner has none (enemies, towers)
+	float GetOwnerMultiplier(const FGameplayAttribute& Attribute) const;
+	float GetTimeBetweenShots() const;
+	float GetReloadTime() const;
 	
 	FTimerHandle FireTimer;
 	FTimerHandle ReloadTimer;

@@ -1,5 +1,9 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "Core/HSGameMode.h"
+#include "Actors/Player/HSPlayerState.h"
 
+
+AHSGameMode::AHSGameMode(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
+{
+	PlayerStateClass = AHSPlayerState::StaticClass();
+}

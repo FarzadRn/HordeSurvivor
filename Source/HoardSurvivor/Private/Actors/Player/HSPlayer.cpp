@@ -1,13 +1,10 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "Actors/Player/HSPlayer.h"
 #include "Camera/CameraComponent.h"
+#include "AbilitySystemComponent.h"
+#include "Actors/Player/HSPlayerState.h"
 
-// Sets default values
 AHSPlayer::AHSPlayer()
 {
-	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	Camera = CreateDefaultSubobject<UCameraComponent>("Camera");
 	Camera->SetupAttachment(RootComponent);
@@ -18,10 +15,25 @@ AHSPlayer::AHSPlayer()
 	bUseControllerRotationPitch = false;
 }
 
-// Called when the game starts or when spawned
 void AHSPlayer::BeginPlay()
 {
 	Super::BeginPlay();
+}
+
+UAbilitySystemComponent* AHSPlayer::GetAbilitySystemComponent() const
+{
+	const AHSPlayerState* HSPlayerState = GetPlayerState<AHSPlayerState>();
+	return HSPlayerState ? HSPlayerState->GetAbilitySystemComponent() : nullptr;
+}
+
+void AHSPlayer::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+
+	if (AHSPlayerState* HSPlayerState = GetPlayerState<AHSPlayerState>())
+	{
+		HSPlayerState->GetAbilitySystemComponent()->InitAbilityActorInfo(HSPlayerState, this);
+	}
 }
 
 void AHSPlayer::Move(FVector2D InputVector)

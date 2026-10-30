@@ -2,6 +2,9 @@
 #include "Actors/Weapons/HSWeaponComponent.h"
 #include "Actors/Weapons/HSWeaponData.h"
 #include "TimerManager.h"
+#include "AbilitySystemComponent.h"
+#include "AbilitySystemGlobals.h"
+#include "Actors/Player/HSPlayerAttributeSet.h"
 #include "Components/ArrowComponent.h"
 
 AHSWeapon::AHSWeapon()
@@ -44,12 +47,12 @@ void AHSWeapon::StartFire()
 		FireShot();
 		if (WeaponData->bIsAutomatic)
 		{
-			GetWorldTimerManager().SetTimer(FireTimer, this, &AHSWeapon::FireShot, WeaponData->TimeBetweenShots,true);
+			GetWorldTimerManager().SetTimer(FireTimer, this, &AHSWeapon::FireShot, GetTimeBetweenShots(),true);
 		}
 	}
 	else if (WeaponData->bIsAutomatic)
 	{
-		GetWorldTimerManager().SetTimer(FireTimer, this, &AHSWeapon::FireShot, WeaponData->TimeBetweenShots,true, static_cast<float>(CooldownSeconds));
+		GetWorldTimerManager().SetTimer(FireTimer, this, &AHSWeapon::FireShot, GetTimeBetweenShots(),true, static_cast<float>(CooldownSeconds));
 	}
 }
 
@@ -77,11 +80,11 @@ void AHSWeapon::FireShot()
 
 	FVector ProjectileSpawnOrigin = Muzzle->GetComponentLocation();
 	FRotator AimDirection = Muzzle->GetComponentRotation();
+	const float OutGoingDamage = WeaponData->Damage * GetOwnerMultiplier(UHSPlayerAttributeSet::GetDamageMultiplierAttribute());
 	
-	WeaponComponent->Fire(ProjectileSpawnOrigin, AimDirection.Vector(), WeaponData->Range, WeaponData->Damage);
-	
+	WeaponComponent->Fire(ProjectileSpawnOrigin, AimDirection.Vector(), WeaponData->Range, OutGoingDamage);	
 	CurrentMagAmmo--;
-	GameTimeWhenNextShotIsAllowed = GetWorld()->GetTimeSeconds() + WeaponData->TimeBetweenShots;
+	GameTimeWhenNextShotIsAllowed = GetWorld()->GetTimeSeconds() + GetTimeBetweenShots();
 }
 
 void AHSWeapon::Reload()
@@ -96,7 +99,7 @@ void AHSWeapon::Reload()
 	}
 	
 	bIsReloading = true;
-	GetWorldTimerManager().SetTimer(ReloadTimer, this, &AHSWeapon::FinishReload, WeaponData->ReloadTime, false);
+	GetWorldTimerManager().SetTimer(ReloadTimer, this, &AHSWeapon::FinishReload, GetReloadTime(), false);
 }
 
 void AHSWeapon::FinishReload()
@@ -112,4 +115,23 @@ void AHSWeapon::FinishReload()
 void AHSWeapon::AddAmmo(int32 Amount)
 {
 	CurrentReserveAmmo = FMath::Clamp(CurrentReserveAmmo + Amount, 0, WeaponData->MaxReserveAmmo);
+}
+
+float AHSWeapon::GetOwnerMultiplier(const FGameplayAttribute& Attribute) const
+{
+	const UAbilitySystemComponent* OwnerAbilitySystemComponent =
+		UAbilitySystemGlobals::GetAbilitySystemComponentFromActor(GetOwner());
+	if (!OwnerAbilitySystemComponent) return 1.f;
+
+	bool bFound = false;
+	const float Value = OwnerAbilitySystemComponent->GetGameplayAttributeValue(Attribute, bFound);
+	return bFound ? Value : 1.f;
+}
+float AHSWeapon::GetTimeBetweenShots() const
+{
+	return WeaponData->TimeBetweenShots / GetOwnerMultiplier(UHSPlayerAttributeSet::GetFireRateMultiplierAttribute());
+}
+float AHSWeapon::GetReloadTime() const
+{
+	return WeaponData->ReloadTime / GetOwnerMultiplier(UHSPlayerAttributeSet::GetReloadSpeedMultiplierAttribute());
 }
